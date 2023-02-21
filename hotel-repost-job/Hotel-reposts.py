@@ -20,6 +20,7 @@ session = gc.spark_session
 glue_db = "hotel-22022023"
 glue_tbl = "raw"
 s3_write_path = "s3://hotaldata-22022023/processes"
+s3_write_path_Cleaned = "s3://hotaldata-22022023/Cleaned"
 
 #########################################
 ### EXTRACT (READ DATA)
@@ -80,6 +81,17 @@ gc.write_dynamic_frame.from_options(
         #"partitionKeys": ["decade"]
     },
     format="parquet"
+)
+
+gc.write_dynamic_frame.from_options(
+    frame=dynamic_frame_write,
+    connection_type="s3",
+    connection_options={
+        "path": s3_write_path_Cleaned,
+        #Here you could create S3 prefixes according to a values in specified columns
+        #"partitionKeys": ["decade"]
+    },
+    format="csv"
 )
 
 #Log end time
