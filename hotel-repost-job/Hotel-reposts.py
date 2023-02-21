@@ -20,7 +20,6 @@ session = gc.spark_session
 glue_db = "hotel-22022023"
 glue_tbl = "raw"
 s3_write_path = "s3://hotaldata-22022023/processes"
-s3_write_path_Cleaned = "s3://hotaldata-22022023/Cleaned"
 
 #########################################
 ### EXTRACT (READ DATA)
@@ -37,7 +36,7 @@ dynamic_frame_read = gc\
 
 #Convert dynamic frame to data frame to use standard pyspark functions
 data_frame = dynamic_frame_read.toDF()
-
+'''
 #########################################
 ### TRANSFORM (MODIFY DATA)
 #########################################
@@ -59,7 +58,7 @@ data_frame = dynamic_frame_read.toDF()
 # #Note: Show function is an action. Actions force the execution of the data frame plan.
 # #With big data the slowdown would be significant without cacching.
 # data_frame_aggregated.show(10)
-
+'''
 #########################################
 ### LOAD (WRITE DATA)
 #########################################
@@ -83,16 +82,6 @@ gc.write_dynamic_frame.from_options(
     format="parquet"
 )
 
-gc.write_dynamic_frame.from_options(
-    frame=dynamic_frame_write,
-    connection_type="s3",
-    connection_options={
-        "path": s3_write_path_Cleaned,
-        #Here you could create S3 prefixes according to a values in specified columns
-        #"partitionKeys": ["decade"]
-    },
-    format="csv"
-)
 #Log end time
 dt_end = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 print("Start time:", dt_end)
